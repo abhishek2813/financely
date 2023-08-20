@@ -1,13 +1,41 @@
+@import url("https://fonts.googleapis.com/css2?family=Montserrat:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap");
+
+:root {
+  --theme: #2970ff;
+  --black: #000;
+  --white: #fff;
+  --shadow-color: 0px 0px 30px 8px rgba(227, 227, 227, 0.7);
+}
+
 body {
   margin: 0;
-  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen',
-    'Ubuntu', 'Cantarell', 'Fira Sans', 'Droid Sans', 'Helvetica Neue',
-    sans-serif;
+  font-family: "Montserrat", sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
 }
 
-code {
-  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
-    monospace;
+input {
+  font-family: "Montserrat", "sans-serif";
+}
+.custom-input{
+  border-width: 0;
+  border-bottom-width:1px;
+   width: 100%;
+   padding: 0.5rem 0rem;
+   font-size: 0.8rem;
+   opacity: 0.8;
+}
+.custom-input:focus{
+   outline: none;
+   opacity: 1;
+   transition: all 0.2s;
+}
+.custom-input::placeholder{
+   color: gray;
+}
+.chart-wrapper{
+  display: flex;
+  justify-content: space-between;
+  width: 94%;
+  box-shadow: var(--shadow-color);
 }
