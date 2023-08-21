@@ -1,9 +1,9 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useMemo, useState } from "react";
 import Header from "../Header";
 import Cards from "../Cards";
 import AddIncome from "../Modals/addIncome";
 import AddExpense from "../Modals/addExpense";
-import { addDoc, collection, deleteDoc, getDocs, query } from "firebase/firestore";
+import { addDoc, collection, getDocs, query } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { toast } from "react-toastify";
 import { useAuthState } from "react-firebase-hooks/auth";
@@ -45,25 +45,24 @@ function Dashboard() {
   };
   async function addTransaction(transaction, many) {
     try {
-      const docRef = await addDoc(
-        collection(db, `users/${user.uid}/transactions`),
-        transaction
-      );
+      const docRef = await addDoc(collection(db, `users/${user.uid}/transactions`), transaction);
       console.warn("documents added with transaction id ", docRef.id);
-      let newArr = transactions;
-      newArr.push(transaction);
-      setTransactions(newArr); // add new transaction into state variable
+      
+      // Create a new array and append the new transaction
+      const updatedTransactions = [...transactions, transaction];
+      setTransactions(updatedTransactions);
+      
       if (!many) toast.success("Transactions added successfully");
       calcalateBalance();
     } catch (error) {
-      // console.log(error);
       if (!many) toast.error("add transaction failed");
     }
   }
+  
 
-  useEffect(() => {
+   useEffect(() => {
     fetchTransactions();
-  }, [user]);
+   }, [user]);
 
   useEffect(() => {
     calcalateBalance();
@@ -91,14 +90,14 @@ function Dashboard() {
   }
   //handle rest balance function
   const handleReset = async()=>{
-    // alert("hello")
-     try {
-      await deleteDoc(collection(db, `users/${user.uid}/transactions`));
-      toast.success("All transactions have been reset")
-     } catch (error) {
-      toast.error(error.message)
-      console.log(error);
-     }
+    toast.warning("Resetting")
+    //  try {
+    //   await deleteDoc(collection(db, `users/${user.uid}/transactions`));
+    //   toast.success("All transactions have been reset")
+    //  } catch (error) {
+    //   toast.error(error.message)
+    //   console.log(error);
+    //  }
   }
 
   function calcalateBalance() {
@@ -115,9 +114,9 @@ function Dashboard() {
     setExpense(totalExpenses);
     setTotalBalance(totalIncome - totalExpenses);
   }
-  let sortTransactionArr = transactions.sort((a, b) => {
-    return new Date(a.date) - new Date(b.date);
-  });
+  const sortedTransactions = useMemo(() => {
+    return [...transactions].sort((a, b) => new Date(a.date) - new Date(b.date));
+  }, [transactions]);
   // console.warn(sortTransactionArr);
   return (
     <div>
@@ -137,7 +136,7 @@ function Dashboard() {
             handleReset={handleReset}
           />
           {transactions && transactions.length !== 0 ? (
-            <Charts sortTransactionArr={sortTransactionArr} />
+            <Charts sortTransactionArr={sortedTransactions} />
           ) : (
             <NOtransactions />
           )}

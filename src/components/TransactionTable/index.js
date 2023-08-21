@@ -1,6 +1,5 @@
 import { Button, Col, Input, Radio, Row, Select, Table } from "antd";
 import React, { useState } from "react";
-import { SearchOutlined } from "@ant-design/icons";
 import { parse, unparse } from "papaparse";
 import { toast } from "react-toastify";
 
@@ -99,7 +98,6 @@ function TransactionTable({ transactions, addTransaction, fetchTransactions }) {
               type="text"
               value={search}
               onChange={(e) => setSearch(e.target.value)}
-              prefix={<SearchOutlined />}
             />
           </Col>
           <Col span={2}>
@@ -146,7 +144,7 @@ function TransactionTable({ transactions, addTransaction, fetchTransactions }) {
                 />
               </Col>
               <Col>
-                <Button icon={<SearchOutlined />} onClick={exportCSV}>
+                <Button onClick={exportCSV}>
                   Export to CSV
                 </Button>
               </Col>

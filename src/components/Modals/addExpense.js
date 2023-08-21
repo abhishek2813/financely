@@ -69,9 +69,16 @@ function AddExpense({ isExpenseModalVisiable, handleExpenseModal, onFinish }) {
             rules={[{ required: true, message: "Please select Tag!" }]}
           >
             <Select placeholder="select your Tag" className="custom-input">
-              <Select.Option value="Salary">Salary</Select.Option>
-              <Select.Option value="Freelance">Freelance</Select.Option>
-              <Select.Option value="Investment">Investment</Select.Option>
+              <Select.Option value="Food">Food</Select.Option>
+              <Select.Option value="Movie">Movie</Select.Option>
+              <Select.Option value="Study">Study</Select.Option>
+              <Select.Option value="Transportation">
+                Transportation
+              </Select.Option>
+              <Select.Option value="Shopping">Shopping</Select.Option>
+              <Select.Option value="Rent">Rent</Select.Option>
+              <Select.Option value="Utilities">Utilities</Select.Option>
+              <Select.Option value="Entertainment">Entertainment</Select.Option>
             </Select>
           </Form.Item>
           <Button type="primary" htmlType="submit">

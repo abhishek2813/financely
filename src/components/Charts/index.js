@@ -1,6 +1,7 @@
-import { Line, Pie } from "@ant-design/charts";
 import { Col, Row } from "antd";
 import React from "react";
+import Chart from "chart.js/auto";
+import { Line,Pie } from "react-chartjs-2";
 
 function Charts({ sortTransactionArr }) {
   const charData = sortTransactionArr.map((item) => {
@@ -16,29 +17,30 @@ function Charts({ sortTransactionArr }) {
     return acc;
   }, {});
 
-  const config = {
-    data: charData,
-    xField: "date",
-    yField: "amount",
-  };
-  const pieConfig = {
-    appendPadding: 10,
-    data: Object.values(finalSpendingArr),
-    angleField: "amount",
-    colorField: "tag",
-    interactions: [{ type: "element-selected" }, { type: "element-active" }],
-    label: {
-      type: "inner",
-      offset: "-50%",
-      content: "{value}",
-      style: {
-        textAlign: "center",
-        fontSize: 14,
-      },
+const LineLabels = charData.map((item)=>item.date)
+const lineData = { 
+  labels: LineLabels,
+  datasets: [
+    {
+      label: "Amount",
+      backgroundColor: "rgb(255, 99, 132)",
+      borderColor: "rgb(255, 99, 132)",
+      data: charData.map((item)=>item.amount),
     },
-  };
+  ],
+  
+};
 
-  let chart;
+const pieLabels = Object.keys(finalSpendingArr)
+const pieData = {
+  labels: pieLabels,
+  datasets: [
+    {
+      label: "Expense",
+      data: pieLabels.map(label => finalSpendingArr[label].amount),
+    },
+  ],
+};
   return (
     <div className="">
       <Row
@@ -50,15 +52,12 @@ function Charts({ sortTransactionArr }) {
       >
         <Col span={16} offset={1}>
           <div>
-            <Line
-              {...config}
-              onReady={(chartInstance) => (chart = chartInstance)}
-            />
+          <Line data={lineData} />
           </div>
         </Col>
         <Col span={7}>
           <div>
-            <Pie {...pieConfig} />
+            <Pie data={pieData} />
           </div>
         </Col>
       </Row>
