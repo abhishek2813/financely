@@ -8,13 +8,14 @@ import {
   Modal,
   Select,
 } from "antd";
-function AddIncome({ isIncomeModalVisiable, handleIncomeModal, onFinish,isUpdate,UpdateData}) {
+function UpdateIncome({ handleIncomeModal, onFinish,isUpdate,UpdateData}) {
   const [form] = Form.useForm();
   return (
     <div>
-      <Modal
-        open={isIncomeModalVisiable}
-        title="Add Income"
+        <div className="income-modal-update">
+        <Modal
+        open={isUpdate}
+        title="Add Income Update"
         onCancel={handleIncomeModal}
         footer={null}
       >
@@ -75,8 +76,10 @@ function AddIncome({ isIncomeModalVisiable, handleIncomeModal, onFinish,isUpdate
           </Button>
         </Form>
       </Modal>
-    </div>
+        </div>
+        <div className="expense-modal-update"></div>
+          </div>
   );
 }
 
-export default AddIncome;
+export default UpdateIncome;

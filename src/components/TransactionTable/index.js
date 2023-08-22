@@ -3,7 +3,13 @@ import React, { useState } from "react";
 import { parse, unparse } from "papaparse";
 import { toast } from "react-toastify";
 
-function TransactionTable({ transactions, addTransaction, fetchTransactions }) {
+function TransactionTable({
+  transactions,
+  addTransaction,
+  fetchTransactions,
+  deleteTransaction,
+  editTransaction,
+}) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
   const [sortKey, setSortKey] = useState("");
@@ -32,6 +38,17 @@ function TransactionTable({ transactions, addTransaction, fetchTransactions }) {
       title: "Date",
       dataIndex: "date",
       key: "date",
+    },
+    {
+      title: "Action",
+      dataIndex: "",
+      key: "action",
+      render: (text, record) => (
+        <>
+          <a onClick={() => editTransaction(record)}>Edit</a> <br />
+          <a onClick={() => deleteTransaction(record.id)}>Delete</a>
+        </>
+      ),
     },
   ];
   const filterArr = transactions.filter(
@@ -144,9 +161,7 @@ function TransactionTable({ transactions, addTransaction, fetchTransactions }) {
                 />
               </Col>
               <Col>
-                <Button onClick={exportCSV}>
-                  Export to CSV
-                </Button>
+                <Button onClick={exportCSV}>Export to CSV</Button>
               </Col>
             </Row>
           </Col>
