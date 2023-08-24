@@ -8,7 +8,7 @@ import {
   Modal,
   Select,
 } from "antd";
-function AddIncome({ isIncomeModalVisiable, handleIncomeModal, onFinish,isUpdate,UpdateData}) {
+function AddIncome({ isIncomeModalVisiable, handleIncomeModal, onFinish}) {
   const [form] = Form.useForm();
   return (
     <div>

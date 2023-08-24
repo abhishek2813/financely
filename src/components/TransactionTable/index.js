@@ -1,4 +1,4 @@
-import { Button, Col, Input, Radio, Row, Select, Table } from "antd";
+import { Button, Col, Input, Radio, Row, Select, Table, Space } from "antd";
 import React, { useState } from "react";
 import { parse, unparse } from "papaparse";
 import { toast } from "react-toastify";
@@ -8,7 +8,8 @@ function TransactionTable({
   addTransaction,
   fetchTransactions,
   deleteTransaction,
-  editTransaction,
+  setUpdateTranction,
+  showUpdateModal,
 }) {
   const [search, setSearch] = useState("");
   const [typeFilter, setTypeFilter] = useState("");
@@ -44,10 +45,25 @@ function TransactionTable({
       dataIndex: "",
       key: "action",
       render: (text, record) => (
-        <>
-          <a onClick={() => editTransaction(record)}>Edit</a> <br />
-          <a onClick={() => deleteTransaction(record.id)}>Delete</a>
-        </>
+        <Space wrap>
+          <Button
+            type="primary"
+            onClick={() => {
+              setUpdateTranction(record);
+              showUpdateModal();
+            }}
+          >
+            Edit
+          </Button>{" "}
+          <br />
+          <Button
+            type="primary"
+            danger
+            onClick={() => deleteTransaction(record.id)}
+          >
+            Delete
+          </Button>
+        </Space>
       ),
     },
   ];

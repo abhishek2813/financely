@@ -10,6 +10,7 @@ import {
   doc,
   getDocs,
   query,
+  updateDoc,
 } from "firebase/firestore";
 import { auth, db } from "../../firebase";
 import { toast } from "react-toastify";
@@ -22,22 +23,33 @@ import UpdateIncome from "../Modals/UpdateIncome";
 function Dashboard() {
   const [isExpenseModalVisiable, setIsExpenseModalVisiable] = useState(false);
   const [isIncomeModalVisiable, setIsIncomeModalVisiable] = useState(false);
+  const [isUpdate, setIsUpdate] = useState(false);
   const [transactions, setTransactions] = useState([]);
   const [isLoading, setisLoading] = useState(false);
   const [income, setIncome] = useState(0);
+  const [updateTranction, setUpdateTranction] = useState({});
   const [expense, setExpense] = useState(0);
   const [totalBalance, setTotalBalance] = useState(0);
   const [user, loading] = useAuthState(auth);
+
   //Modals functions
   const showExpenseModal = () => setIsExpenseModalVisiable(true); // set isExpenseMod visible
   const showIncomeModal = () => setIsIncomeModalVisiable(true); // set isIncomeModal visible
+  const showUpdateModal = () => setIsUpdate(true); // set isUpadteModal visible
   const handleExpenseModal = () => setIsExpenseModalVisiable(false); // set isExpenseMod visible false
   const handleIncomeModal = () => setIsIncomeModalVisiable(false); // set isIncomeMod visible false
+  const handleUpdateModal = () => setIsUpdate(false); // set isIncomeMod visible false
 
   // check variables with console messages
   // console.log(user.uid);
   // console.log(transactions)
-
+  // console.log("UPadte tracnction on edit", updateTranction);
+  // Reset updateTranction when isUpdate becomes false
+  useEffect(() => {
+    if (!isUpdate) {
+      setUpdateTranction({});
+    }
+  }, [isUpdate]);
   //Handle the submit of modal
   const onFinish = (value, type) => {
     const newTransaction = {
@@ -53,7 +65,7 @@ function Dashboard() {
   };
   async function addTransaction(transaction, many) {
     try {
-       await addDoc(
+      await addDoc(
         collection(db, `users/${user.uid}/transactions`),
         transaction
       );
@@ -124,24 +136,42 @@ function Dashboard() {
     }
   };
 
-  const deleteTransaction =async(id) =>{
-    setisLoading(true)
+  const deleteTransaction = async (id) => {
+    setisLoading(true);
     try {
-    await deleteDoc(doc(db, `users/${user.uid}/transactions/${id}`)); // Remove '/transactions' from the path
-    toast.success("Successfully deleted")
-    fetchTransactions();
-    setisLoading(false)
+      await deleteDoc(doc(db, `users/${user.uid}/transactions/${id}`)); // Remove '/transactions' from the path
+      toast.success("Successfully deleted");
+      fetchTransactions();
+      setisLoading(false);
     } catch (error) {
       toast.error(error.message);
       console.log(error);
-      setisLoading(false)
+      setisLoading(false);
     }
-  }
-  
-  const editTransaction = async(tranc)=>{
-    toast.warn("edit transaction")
-    console.log(tranc);
-  }
+  };
+
+  const onUpdate = async (value, type, id) => {
+    // console.log(value);
+    try {
+      const updateTransaction = {
+        type,
+        tag: value.tag,
+        name: value.name,
+        amount: parseFloat(value.amount),
+        date: value.date.format("YYYY-MM-DD"),
+      };
+
+      const docRef = doc(db, `users/${user.uid}/transactions`, id);
+      await updateDoc(docRef, updateTransaction); // This line updates the Firestore document
+      toast.success(`Updated transaction`);
+      fetchTransactions();
+      setIsUpdate(false); // closing the update modal
+    } catch (error) {
+      toast.error(error.message);
+      console.error(error);
+    }
+  };
+
   function calcalateBalance() {
     let totalIncome = 0;
     let totalExpenses = 0;
@@ -188,7 +218,6 @@ function Dashboard() {
             isIncomeModalVisiable={isIncomeModalVisiable}
             handleIncomeModal={handleIncomeModal}
             onFinish={onFinish}
-            isUpdate={false}
           />
           <AddExpense
             isExpenseModalVisiable={isExpenseModalVisiable}
@@ -200,7 +229,14 @@ function Dashboard() {
             addTransaction={addTransaction}
             fetchTransactions={fetchTransactions}
             deleteTransaction={deleteTransaction}
-            editTransaction={editTransaction}
+            setUpdateTranction={setUpdateTranction}
+            showUpdateModal={showUpdateModal}
+          />
+          <UpdateIncome
+            isUpdate={isUpdate}
+            handleUpdateModal={handleUpdateModal}
+            onUpdate={onUpdate}
+            updateTranction={updateTranction}
           />
         </>
       )}

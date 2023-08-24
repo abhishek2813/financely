@@ -8,15 +8,17 @@ function Charts({ sortTransactionArr }) {
     return { date: item.date, amount: item.amount };
   });
   let finalSpendingArr = sortTransactionArr.reduce((acc, obj) => {
-    let key = obj.tag;
-    if (!acc[key]) {
-      acc[key] = { tag: obj.tag, amount: obj.amount }; //create a new object with same tag
-    } else {
-      acc[key].amount += obj.amount;
+    if (obj.type === "Expense") {
+      let tag = obj.tag;
+      if (!acc[tag]) {
+        acc[tag] = { tag: tag, amount: obj.amount };
+      } else {
+        acc[tag].amount += obj.amount;
+      }
     }
     return acc;
   }, {});
-
+console.log(finalSpendingArr);
 const LineLabels = charData.map((item)=>item.date)
 const lineData = { 
   labels: LineLabels,
