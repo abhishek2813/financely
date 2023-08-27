@@ -1,4 +1,4 @@
-.navbar{
+/* .navbar{
     display: flex;
     align-items: center;
     justify-content: space-between;
@@ -10,13 +10,20 @@
     background-color: var(--theme);
     z-index: 1000;
 }
+
+.link{
+    opacity: 0.8;
+    cursor: pointer;
+}
+.link:hover{
+    opacity: 1;
+    transition: all 0.3s;
+} */
 .logo{
     color: var(--white);
     font-weight: 500;
     font-size: 1.2rem;
-    margin: 0;
-    margin-right: 20px;
-    margin-left: 15px;
+    cursor: pointer;
 }
 .link{
     opacity: 0.8;

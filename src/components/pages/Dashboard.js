@@ -62,6 +62,8 @@ function Dashboard() {
     // console.warn(newTransaction);
     //add transaction to firebase function
     addTransaction(newTransaction);
+    handleIncomeModal()
+    handleExpenseModal()
   };
   async function addTransaction(transaction, many) {
     try {
@@ -135,7 +137,7 @@ function Dashboard() {
       console.log(error);
     }
   };
-
+ 
   const deleteTransaction = async (id) => {
     setisLoading(true);
     try {
@@ -165,7 +167,7 @@ function Dashboard() {
       await updateDoc(docRef, updateTransaction); // This line updates the Firestore document
       toast.success(`Updated transaction`);
       fetchTransactions();
-      setIsUpdate(false); // closing the update modal
+      handleUpdateModal(); // for closing the update modal
     } catch (error) {
       toast.error(error.message);
       console.error(error);
@@ -191,9 +193,8 @@ function Dashboard() {
       (a, b) => new Date(a.date) - new Date(b.date)
     );
   }, [transactions]);
-  // console.warn(sortTransactionArr);
   return (
-    <div>
+    <div style={{margin:0,padding:0}}>
       <Header />
       {isLoading ? (
         <>

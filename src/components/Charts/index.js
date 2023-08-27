@@ -1,7 +1,7 @@
-import { Col, Row } from "antd";
+import { Card, Col, Divider, Row, Typography } from "antd";
 import React from "react";
 import Chart from "chart.js/auto";
-import { Line,Pie } from "react-chartjs-2";
+import { Line, Pie } from "react-chartjs-2";
 
 function Charts({ sortTransactionArr }) {
   const charData = sortTransactionArr.map((item) => {
@@ -18,31 +18,40 @@ function Charts({ sortTransactionArr }) {
     }
     return acc;
   }, {});
-console.log(finalSpendingArr);
-const LineLabels = charData.map((item)=>item.date)
-const lineData = { 
-  labels: LineLabels,
-  datasets: [
-    {
-      label: "Amount",
-      backgroundColor: "rgb(255, 99, 132)",
-      borderColor: "rgb(255, 99, 132)",
-      data: charData.map((item)=>item.amount),
-    },
-  ],
-  
-};
 
-const pieLabels = Object.keys(finalSpendingArr)
-const pieData = {
-  labels: pieLabels,
-  datasets: [
-    {
-      label: "Expense",
-      data: pieLabels.map(label => finalSpendingArr[label].amount),
-    },
-  ],
-};
+  const LineLabels = charData.map((item) => item.date);
+  const lineData = {
+    labels: LineLabels,
+    datasets: [
+      {
+        label: "Amount",
+        backgroundColor: "rgb(255, 99, 132)",
+        borderColor: "rgb(255, 99, 132)",
+        data: charData.map((item) => item.amount),
+        borderCapStyle: "round",
+        pointBackgroundColor: "rgba(255, 0, 0, 0.2)",
+        pointOpacity: 0.5,
+        pointRadius: 4,
+        pointHoverRadius: 6,
+        responsive: true,
+      },
+    ],
+  };
+  // const options = {
+  //   maintainAspectRatio: false,
+  // };
+  const pieLabels = Object.keys(finalSpendingArr);
+  const pieData = {
+    labels: pieLabels,
+    datasets: [
+      {
+        label: "Expense",
+        data: pieLabels.map((label) => finalSpendingArr[label].amount),
+        borderWidth: 1,
+        responsive: true,
+      },
+    ],
+  };
   return (
     <div className="">
       <Row
@@ -51,18 +60,40 @@ const pieData = {
           sm: 16,
           md: 24,
         }}
+        justify={"center"}
       >
-        <Col span={16} offset={1}>
-          <div>
-          <Line data={lineData} />
-          </div>
+        <Col xs={22} sm={22} md={16} lg={15} xl={15}>
+          <Card
+            bordered={false}
+            hoverable
+            style={{ marginTop: 16, marginBottom: 10 }}
+          >
+            <Card.Meta
+              title="Income Line Chart"
+              style={{ textAlign: "center", marginTop: 2 }}
+            />
+            <div>
+              <Line data={lineData} />
+            </div>
+          </Card>
         </Col>
-        <Col span={7}>
-          <div>
-            <Pie data={pieData} />
-          </div>
+        <Col xs={22} sm={22} md={6} lg={8} xl={8}>
+          <Card bordered={false} hoverable style={{ marginTop: 16 }}>
+            <Card.Meta
+              title="Expense Pie Chart"
+              style={{ textAlign: "center", marginTop: 2 }}
+            />
+            {pieData.labels.length !== 0 ? (
+              <Pie data={pieData} />
+            ) : (
+              <Typography.Title level={3} style={{ textAlign: "center" }}>
+                There is No Expense
+              </Typography.Title>
+            )}
+          </Card>
         </Col>
       </Row>
+      <Divider dashed />
     </div>
   );
 }

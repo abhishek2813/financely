@@ -2,11 +2,12 @@ import React, { useEffect } from "react";
 import "./style.css";
 import { auth } from "../../firebase";
 import { useAuthState } from "react-firebase-hooks/auth";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { signOut } from "firebase/auth";
 import { toast } from "react-toastify";
+import { Layout,Button } from 'antd';
 function Header() {
-  const [user, loading] = useAuthState(auth);
+  const [user] = useAuthState(auth);
   const navigate = useNavigate();
   useEffect(() => {
     if (user) {
@@ -31,16 +32,16 @@ function Header() {
     }
   };
   return (
-    <div className="navbar">
-      <p className="logo">Finacly</p>
-      {user ? (
-        <p className="logo link" onClick={handleLogout}>
-          Logout
-        </p>
-      ) : (
-        <p></p>
-      )}
-    </div>
+    <Layout className="layout" >
+    <Layout.Header style={{ position:"sticky",top:0, zIndex:1,display: 'flex', justifyContent: 'space-between',backgroundColor:"var(--theme)" }}>
+    <div className="logo" style={{ color: 'white' }}>Finacly</div>
+      <div>
+        {user ? <Button className="link" style={{ marginRight: '10px' }} onClick={handleLogout}>Logout</Button> :
+        <Button className="link"  style={{ marginRight: '10px' }}><Link to={"/"} >SignIn</Link></Button>
+        }
+      </div>
+    </Layout.Header>
+  </Layout>
   );
 }
 

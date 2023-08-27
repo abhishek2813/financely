@@ -1,12 +1,20 @@
-import React from 'react'
-import "./style.css"
+import React from "react";
 
-function Button({text,onclick,blue,disable}) {
+import { Button } from "antd";
+function ButtonCom({ text, onclick, blue, disable }) {
   return (
-    <div className={blue?"btn btn-blue":"btn"} onClick={onclick} disable={disable}>
-      {text}
-    </div>
-  )
+    <>
+      <Button 
+        type={blue?"primary":"text"}
+        style={{
+          width: "100%",
+        }}
+        onClick={onclick} disable={disable}
+      >
+        {text}
+      </Button>
+    </>
+  );
 }
 
-export default Button
+export default ButtonCom;

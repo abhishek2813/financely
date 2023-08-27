@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import Input from "../Input";
-import Button from "../Button";
+import ButtonCom from "../Button";
 import "./style.css";
 import { toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
@@ -136,12 +136,13 @@ function SignUpSignIn() {
               state={password}
               setState={setPassword}
             />
-            <Button
+            <br />
+            <ButtonCom
               text={loading ? "Loading...." : "Login"}
-              onclick={handleSignIn}
+              onclick={handleSignIn} blue={true}
             />
             <p style={{ textAlign: "center", color: "var(--black)" }}>Or</p>
-            <Button
+            <ButtonCom
               text={loading ? "Loading...." : "Login using Google"}
               blue={true}
               onclick={handleGoogleAuth}
@@ -182,12 +183,13 @@ function SignUpSignIn() {
               state={cpassword}
               setState={setCpassword}
             />
-            <Button
+            <br />
+            <ButtonCom
               text={loading ? "Loading...." : "Signup using email and password"}
-              onclick={handleSignUp}
+              onclick={handleSignUp} blue={true}
             />
             <p style={{ textAlign: "center", color: "var(--black)" }}>Or</p>
-            <Button
+            <ButtonCom
               text={loading ? "Loading...." : "Signup using Google"}
               blue={true}
               onclick={handleGoogleAuth}
