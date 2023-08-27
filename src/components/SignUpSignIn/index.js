@@ -12,6 +12,7 @@ import {
 } from "firebase/auth";
 import { useNavigate } from "react-router-dom";
 import { getDoc, setDoc,doc } from "firebase/firestore";
+import { Spin } from "antd";
 
 function SignUpSignIn() {
   const [name, setName] = useState("");
@@ -197,6 +198,7 @@ function SignUpSignIn() {
           </form>
         </>
       )}
+      {loading &&<Spin tip="Loading..." size="large"></Spin>}
       <p
         onClick={() => setIsLogin(!isLogin)}
         style={{

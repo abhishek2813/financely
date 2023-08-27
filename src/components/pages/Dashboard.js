@@ -19,13 +19,14 @@ import TransactionTable from "../TransactionTable";
 import Charts from "../Charts";
 import NOtransactions from "../Notransactions";
 import UpdateIncome from "../Modals/UpdateIncome";
+import { Row, Spin } from "antd";
 
 function Dashboard() {
   const [isExpenseModalVisiable, setIsExpenseModalVisiable] = useState(false);
   const [isIncomeModalVisiable, setIsIncomeModalVisiable] = useState(false);
   const [isUpdate, setIsUpdate] = useState(false);
   const [transactions, setTransactions] = useState([]);
-  const [isLoading, setisLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
   const [income, setIncome] = useState(0);
   const [updateTranction, setUpdateTranction] = useState({});
   const [expense, setExpense] = useState(0);
@@ -62,10 +63,11 @@ function Dashboard() {
     // console.warn(newTransaction);
     //add transaction to firebase function
     addTransaction(newTransaction);
-    handleIncomeModal()
-    handleExpenseModal()
+    handleIncomeModal();
+    handleExpenseModal();
   };
   async function addTransaction(transaction, many) {
+    setIsLoading(true);
     try {
       await addDoc(
         collection(db, `users/${user.uid}/transactions`),
@@ -77,8 +79,10 @@ function Dashboard() {
       setTransactions(updatedTransactions);
       if (!many) toast.success("Transactions added successfully");
       calcalateBalance();
+      setIsLoading(false);
     } catch (error) {
       if (!many) toast.error("add transaction failed");
+      setIsLoading(false);
     }
   }
   useEffect(() => {
@@ -91,7 +95,7 @@ function Dashboard() {
 
   // fetch Transactions from firebase database
   async function fetchTransactions() {
-    setisLoading(true);
+    setIsLoading(true);
     if (user) {
       try {
         const queryData = query(
@@ -108,11 +112,11 @@ function Dashboard() {
           transactionArray.push(transactionObject);
         });
         setTransactions(transactionArray);
-        setisLoading(false);
+        setIsLoading(false);
         toast.success("Transactions loaded successfully");
       } catch (error) {
         toast.error(error);
-        setisLoading(false);
+        setIsLoading(false);
       }
     }
   }
@@ -121,6 +125,7 @@ function Dashboard() {
 
   //handle rest balance function
   const handleReset = async () => {
+    setIsLoading(true);
     try {
       const transactionsRef = collection(db, `users/${user.uid}/transactions`);
       const transactionsSnapshot = await getDocs(transactionsRef);
@@ -132,28 +137,30 @@ function Dashboard() {
       await Promise.all(deletePromises);
       toast.success("All transactions have been reset");
       fetchTransactions();
+      setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
       console.log(error);
+      setIsLoading(false);
     }
   };
- 
+
   const deleteTransaction = async (id) => {
-    setisLoading(true);
+    setIsLoading(true);
     try {
       await deleteDoc(doc(db, `users/${user.uid}/transactions/${id}`)); // Remove '/transactions' from the path
       toast.success("Successfully deleted");
       fetchTransactions();
-      setisLoading(false);
+      setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
       console.log(error);
-      setisLoading(false);
+      setIsLoading(false);
     }
   };
 
   const onUpdate = async (value, type, id) => {
-    // console.log(value);
+    setIsLoading(true);
     try {
       const updateTransaction = {
         type,
@@ -162,15 +169,16 @@ function Dashboard() {
         amount: parseFloat(value.amount),
         date: value.date.format("YYYY-MM-DD"),
       };
-
       const docRef = doc(db, `users/${user.uid}/transactions`, id);
       await updateDoc(docRef, updateTransaction); // This line updates the Firestore document
       toast.success(`Updated transaction`);
       fetchTransactions();
       handleUpdateModal(); // for closing the update modal
+      setIsLoading(false);
     } catch (error) {
       toast.error(error.message);
       console.error(error);
+      setIsLoading(false);
     }
   };
 
@@ -194,12 +202,16 @@ function Dashboard() {
     );
   }, [transactions]);
   return (
-    <div style={{margin:0,padding:0}}>
+    <div style={{ margin: 0, padding: 0 }}>
       <Header />
       {isLoading ? (
-        <>
-          <p>Loading .......</p>
-        </>
+        <Row
+          justify={"space-around"}
+          align={"middle"}
+          style={{ minHeight: "100vh" }}
+        >
+          <Spin tip="Loading..." size="large"></Spin>
+        </Row>
       ) : (
         <>
           <Cards
