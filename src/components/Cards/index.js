@@ -32,7 +32,7 @@ function Cards({
           <Card className="card-item" hoverable style={{ marginTop: 16 }}>
             <h2>Income Balance</h2>
             <p>₹ {income}</p>
-            <ButtonCom text="Total Income" blue={true} onclick={showIncomeModal} />
+            <ButtonCom text="Add Income" blue={true} onclick={showIncomeModal} />
           </Card>
         </Col>
         <Col xs={22} sm={22} md={12} lg={7} xl={7}>
@@ -40,7 +40,7 @@ function Cards({
             <h2>Expense Balance</h2>
             <p>₹ {expense}</p>
             <ButtonCom
-              text="Total Expens"
+              text="Add Expense"
               blue={true}
               onclick={showExpenseModal}
             />
